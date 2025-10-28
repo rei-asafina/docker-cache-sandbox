@@ -1,0 +1,12 @@
+FROM golang:1.21 AS build
+
+WORKDIR /app/hello
+
+# すべてまとめてコピー（非効率）
+COPY . .
+
+# 依存取得とビルド（毎回実行される）
+RUN cd hello && go mod download
+RUN cd hello && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/hello-app main.go
+
+CMD ["/app/hello-app"]

@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  hello:
+    build:
+      context: .
+      dockerfile: Dockerfile.god
+    image: hello-god:dev
+    command: ["/app/hello-app"]
+
+volumes:
+  go-mod-cache:
+  go-build-cache:

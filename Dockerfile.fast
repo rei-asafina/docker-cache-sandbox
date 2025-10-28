@@ -1,0 +1,18 @@
+FROM golang:1.21 AS build
+
+WORKDIR /app/hello
+
+# ローカル依存モジュールを先にコピー
+COPY common /app/common
+
+# go.mod / go.sum に変更がない場合は、レイヤーキャッシュを使用してダウンロードをスキップできる
+COPY hello/go.mod hello/go.sum* ./
+RUN go mod download
+
+# アプリ本体をコピー
+COPY hello .
+
+# ビルド
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/hello-app main.go
+
+CMD ["/app/hello-app"]
